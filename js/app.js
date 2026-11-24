@@ -1,19 +1,22 @@
-const componentFiles = [
+const parentComponents = [
     ["navbar-root", "components/navbar/navbar.html"],
     ["hero-banner-root", "components/hero-banner/hero-banner.html"],
     ["get-started-root", "components/get-started/get-started.html"],
     ["dashboard-section-root", "components/dashboard-section/dashboard-section.html"],
-    ["stat-total-root", "components/stat-total/stat-total.html"],
-    ["stat-sent-root", "components/stat-sent/stat-sent.html"],
-    ["stat-won-root", "components/stat-won/stat-won.html"],
-    ["stat-value-root", "components/stat-value/stat-value.html"],
     ["opportunity-tracker-root", "components/opportunity-tracker/opportunity-tracker.html"],
-    ["tracker-toolbar-root", "components/tracker-toolbar/tracker-toolbar.html"],
-    ["proposal-table-root", "components/proposal-table/proposal-table.html"],
     ["proposal-form-root", "components/proposal-form/proposal-form.html"],
     ["follow-up-reminders-root", "components/follow-up-reminders/follow-up-reminders.html"],
     ["quick-tip-root", "components/quick-tip/quick-tip.html"],
     ["footer-root", "components/footer/footer.html"]
+];
+
+const childComponents = [
+    ["stat-total-root", "components/stat-total/stat-total.html"],
+    ["stat-sent-root", "components/stat-sent/stat-sent.html"],
+    ["stat-won-root", "components/stat-won/stat-won.html"],
+    ["stat-value-root", "components/stat-value/stat-value.html"],
+    ["tracker-toolbar-root", "components/tracker-toolbar/tracker-toolbar.html"],
+    ["proposal-table-root", "components/proposal-table/proposal-table.html"]
 ];
 
 async function loadComponent(elementId, filePath) {
@@ -28,8 +31,16 @@ async function loadComponent(elementId, filePath) {
 
 async function startFreelanceFlow() {
     try {
+        // 1. Load all parent containers present in index.html first
         await Promise.all(
-            componentFiles.map(([elementId, filePath]) =>
+            parentComponents.map(([elementId, filePath]) =>
+                loadComponent(elementId, filePath)
+            )
+        );
+
+        // 2. Now that parents are in the DOM, load the nested child components
+        await Promise.all(
+            childComponents.map(([elementId, filePath]) =>
                 loadComponent(elementId, filePath)
             )
         );
