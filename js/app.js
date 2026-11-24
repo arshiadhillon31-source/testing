@@ -65,7 +65,11 @@ async function startFreelanceFlow() {
 
         for (const [folder, initName] of modules) {
             const module = await import(`../components/${folder}/${folder}.js`);
-            module[initName]();
+            if (typeof module[initName] === "function") {
+                module[initName]();
+            } else {
+                console.warn(`Skipped ${folder}.js: ${initName} is not exported`);
+            }
         }
 
         const dashboard = await import("../js/dashboard.js");
